@@ -27,6 +27,9 @@ Our [base project](https://github.com/alixaxel/chrome-aws-lambda) recommends all
 least 1 600 MB RAM. You know the
 [memes about Chrome and RAM](https://knowyourmeme.com/memes/google-chrome-ram-hog)..
 
+You should also increase timeout in Lambda from default. I used 2 minutes for timeout but
+your needs may vary.
+
 
 Minimal test example
 --------------------
