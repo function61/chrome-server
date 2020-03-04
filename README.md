@@ -89,7 +89,7 @@ Example with `curl` and authorization (you can use anything as token, if you hav
 up authorization):
 
 ```console
-$ curl --data-binary "@script.js" -H 'Authorization: Bearer ...' -H 'Content-Type: application/javascript' https://function61.com/api/chromeserver/job
+$ curl --data-binary "@script.js" -H 'Authorization: Bearer ...' -H 'Content-Type: application/javascript' https://example.com/api/chromeserver/job
 ```
 
 
