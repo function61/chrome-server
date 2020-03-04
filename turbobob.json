@@ -1,0 +1,31 @@
+{
+	"for_description_of_this_file_see": "https://github.com/function61/turbobob",
+	"version_major": 1,
+	"project_name": "chrome-server",
+	"builders": [
+		{
+			"name": "default",
+			"uses": "dockerfile://build-default.Dockerfile",
+			"mount_source": "",
+			"mount_destination": "/workspace",
+			"workdir": "/workspace",
+			"commands": {
+				"build": ["bin/build.sh"],
+				"dev": ["bash"]
+			}
+		},
+		{
+			"name": "publisher",
+			"uses": "docker://fn61/buildkit-publisher:20200228_1755_83c203ff",
+			"mount_destination": "/workspace",
+			"commands": {
+				"publish": ["publish-gh.sh", "function61/chrome-server", "rel/"],
+				"dev": ["bash"]
+			},
+			"pass_envs": [
+				"GITHUB_TOKEN",
+				"EVENTHORIZON"
+			]
+		}
+	]
+}
