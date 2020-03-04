@@ -20,6 +20,13 @@ Installation
 
 Just plop the `lambdafunc.zip` from the download link into AWS Lambda.
 
+Then set up AWS API Gateway or [Edgerouter](https://github.com/function61/edgerouter) as
+the HTTP ingress.
+
+Our [base project](https://github.com/alixaxel/chrome-aws-lambda) recommends allocating at
+least 1 600 MB RAM. You know the
+[memes about Chrome and RAM](https://knowyourmeme.com/memes/google-chrome-ram-hog)..
+
 
 Minimal test example
 --------------------
