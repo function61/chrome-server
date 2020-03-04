@@ -1,5 +1,5 @@
 ![Build status](https://github.com/function61/chrome-server/workflows/Build/badge.svg)
-![Download](https://img.shields.io/github/downloads/function61/chrome-server/total.svg?style=for-the-badge)
+[![Download](https://img.shields.io/github/downloads/function61/chrome-server/total.svg?style=for-the-badge)](https://github.com/function61/chrome-server/releases)
 
 Chrome automation microservice for AWS Lambda.
 
