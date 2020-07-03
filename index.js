@@ -9,6 +9,7 @@ const unlink = util.promisify(fs.unlink);
 class JobContext {
 	logMessages = [];
 	errorMessages = [];
+	params = {}; // query params
 	data = null;
 	err = null;
 
@@ -24,9 +25,9 @@ class JobContext {
 	}
 }
 
-exports.runJob = async (jobScript) => {
-	const jobCtx = new JobContext();
+exports.JobContext = JobContext;
 
+exports.runJob = async (jobScript, jobCtx) => {
 	let browser = null;
 
 	const jobFilename = '/tmp/' + crypto.randomBytes(8).toString('hex') + '.js';
@@ -82,11 +83,14 @@ exports.handler = async (event, context) => {
 		return badRequest('Expecting application/javascript Content-Type');
 	}
 
+	const jobCtx = new JobContext();
+	jobCtx.params = event.queryStringParameters;
+
 	const jobScript = event.isBase64Encoded ?
 		Buffer.from(event.body, 'base64').toString('utf-8') :
 		event.body;
 
-	const result = await exports.runJob(jobScript);
+	const result = await exports.runJob(jobScript, jobCtx);
 
 	return succeedJson(result);
 };
