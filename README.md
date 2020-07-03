@@ -103,6 +103,15 @@ $ curl --data-binary "@script.js" -H 'Authorization: Bearer ...' -H 'Content-Typ
 ```
 
 
+Sending parameters to the script
+--------------------------------
+
+Since you're sending the script, in theory you could replace placeholders from the script,
+but that's ugly.
+
+Any URL parameters like `POST /api/chromeserver/job?msg=foo` will be available at `ctx.params.msg`
+
+
 Local automation script dev
 ---------------------------
 
