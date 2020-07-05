@@ -1,7 +1,8 @@
 ![Build status](https://github.com/function61/chrome-server/workflows/Build/badge.svg)
 [![Download](https://img.shields.io/github/downloads/function61/chrome-server/total.svg?style=for-the-badge)](https://github.com/function61/chrome-server/releases)
 
-Chrome automation microservice for AWS Lambda.
+Chrome automation microservice for AWS Lambda with an HTTP API, automatic screenshotting
+on errors and file upload support.
 
 ![](docs/drawing.png)
 
@@ -10,6 +11,10 @@ Contents:
 - [Installation](#installation)
 - [Minimal test example](#minimal-test-example)
 - [How to submit jobs](#how-to-submit-jobs)
+- [Sending parameters to the script](#sending-parameters-to-the-script)
+- [Automatic screenshotting on errors](#automatic-screenshotting-on-errors)
+- [File uploads](#file-uploads)
+- [Setting up for screenshots and file uploads](#setting-up-for-screenshots-and-file-uploads)
 - [Local automation script dev](#local-automation-script-dev)
 - [Security](#security)
 - [Credits](#credits)
@@ -110,6 +115,53 @@ Since you're sending the script, in theory you could replace placeholders from t
 but that's ugly.
 
 Any URL parameters like `POST /api/chromeserver/job?msg=foo` will be available at `ctx.params.msg`
+
+
+Automatic screenshotting on errors
+----------------------------------
+
+This isn't enabled by default, but you've to add `errorAutoScreenshot=1` URL parameter.
+
+If your script run throws an exception a screenshot will be taken, saved to S3 and URL
+to it will be returned along with your error.
+
+
+File uploads
+------------
+
+If your script run returns large data (like files) enough not to want returning them in
+the response JSON, you can call `ctx.uploadFile()` to have files uploaded to S3. The
+function returns URL to the file, which you can return with your JSON.
+
+
+Setting up for screenshots and file uploads
+-------------------------------------------
+
+You need to have a S3 bucket, and define that as `S3_BUCKET` ENV variable for your Lambda.
+
+We recommend you to set up automatic expiration for a specific directory prefix like
+`temp-7d/` to delete files in 7 days.
+
+We recommend you don't give your Lambda full S3 access, not even to said bucket but only
+for a subdirectory. Here's an example policy:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": [
+                "arn:aws:s3:::YOUR-BUCKET_NAME/temp-7d/chrome-server/*"
+            ]
+        }
+    ]
+}
+```
 
 
 Local automation script dev
