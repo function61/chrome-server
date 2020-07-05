@@ -36,6 +36,10 @@ class JobContext {
 	// returns URL to the created file
 	async uploadFile(name, payload, contentType) {
 		const bucket = process.env.S3_BUCKET;
+		if (!bucket) {
+			throw new Error("S3_BUCKET not defined");
+		}
+
 		const fullKey = `temp-7d/chrome-server/${this.invocationId}/${name}`;
 
 		await s3PutObject({
