@@ -129,7 +129,7 @@ to it will be returned along with your error.
 File uploads
 ------------
 
-If your script run returns large data (like files) enough not to want returning them in
+If your script run produces much data (like files) to not like returning them in
 the response JSON, you can call `ctx.uploadFile()` to have files uploaded to S3. The
 function returns URL to the file, which you can return with your JSON.
 
@@ -207,7 +207,10 @@ Since this service evaluates user-sent JavaScript, you need to trust the API use
 Have the API be protected via authorization in AWS's API Gateway or in
 [Edgerouter](https://github.com/function61/edgerouter).
 
-Don't give the Lambda function any privileges beyond what is needed to run Lambda.
+Don't give the Lambda function any privileges beyond what is needed to do its job:
+
+- run Lambda
+- upload data to S3 to a restricted path within the bucket
 
 
 Credits
