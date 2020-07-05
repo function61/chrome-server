@@ -1,0 +1,97 @@
+package chromeserverclient
+
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/url"
+	"strings"
+
+	"github.com/function61/gokit/envvar"
+	"github.com/function61/gokit/ezhttp"
+)
+
+type Output struct {
+	LogMessages            []string         `json:"logMessages"`
+	ErrorMessages          []string         `json:"errorMessages"`
+	Error                  *string          `json:"error"`
+	ErrorAutoScreenshotUrl *string          `json:"errorAutoScreenshotUrl"`
+	Data                   *json.RawMessage `json:"data"`
+}
+
+const (
+	Function61 = "https://function61.com/api/chromeserver"
+)
+
+type AuthTokenObtainer func() (string, error)
+
+type Options struct {
+	ErrorAutoScreenshot bool
+	Params              map[string]string
+}
+
+type Client struct {
+	baseUrl   string
+	authToken string
+}
+
+func New(baseUrl string, obtainAuthToken AuthTokenObtainer) (*Client, error) {
+	authToken, err := obtainAuthToken()
+	if err != nil {
+		return nil, err
+	}
+
+	return &Client{baseUrl, authToken}, nil
+}
+
+func (c *Client) Run(
+	ctx context.Context,
+	script string,
+	data interface{},
+	opts *Options,
+) (*Output, error) {
+	if opts == nil {
+		opts = &Options{}
+	}
+
+	queryPars := url.Values{}
+	if opts.ErrorAutoScreenshot {
+		queryPars.Set("errorAutoScreenshot", "1")
+	}
+
+	for key, val := range opts.Params {
+		queryPars.Set(key, val)
+	}
+
+	output := &Output{}
+	if _, err := ezhttp.Post(
+		ctx,
+		c.baseUrl+"/job?"+queryPars.Encode(),
+		ezhttp.AuthBearer(c.authToken),
+		ezhttp.SendBody(strings.NewReader(script), "application/javascript"),
+		ezhttp.RespondsJson(output, false),
+	); err != nil {
+		return nil, fmt.Errorf("chromeserver: %w", err)
+	}
+
+	if output.Error != nil {
+		return nil, fmt.Errorf("structural error set: %s", *output.Error)
+	}
+
+	if output.Data == nil {
+		return nil, errors.New("no data in response JSON")
+	}
+
+	return output, json.Unmarshal(*output.Data, data)
+}
+
+func StaticToken(token string) AuthTokenObtainer {
+	return func() (string, error) {
+		return token, nil
+	}
+}
+
+func TokenFromEnv() (string, error) {
+	return envvar.Required("CHROMESERVER_AUTH_TOKEN")
+}

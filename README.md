@@ -100,6 +100,13 @@ $ curl ...
 How to submit jobs
 ------------------
 
+### Use from Go
+
+There is a small [Go-based client](./pkg/chromeserverclient/) available.
+
+
+### curl
+
 Example with `curl` and authorization (you can use anything as token, if you haven't set
 up authorization):
 
