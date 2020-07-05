@@ -9,9 +9,6 @@ const s3 = new aws.S3();
 const writeFile = util.promisify(fs.writeFile);
 const unlink = util.promisify(fs.unlink);
 
-// TODO: promisifyThis(this, fn) ?
-const s3PutObject = util.promisify(s3.putObject).bind(s3);
-
 class JobContext {
 	// for when you need a FS-safe ID for your job. is automatically used to partition
 	// uploaded files as well
@@ -42,12 +39,12 @@ class JobContext {
 
 		const fullKey = `temp-7d/chrome-server/${this.invocationId}/${name}`;
 
-		await s3PutObject({
+		await s3.putObject({
 			Bucket: bucket,
 			Key: fullKey,
 			Body: payload,
 			ContentType: contentType,
-		});
+		}).promise();
 
 		return `https://s3.amazonaws.com/${bucket}/${fullKey}`;
 	}
