@@ -17,9 +17,9 @@ import (
 type Output struct {
 	LogMessages            []string         `json:"logMessages"`
 	ErrorMessages          []string         `json:"errorMessages"`
-	Error                  *string          `json:"error"`
-	ErrorAutoScreenshotUrl *string          `json:"errorAutoScreenshotUrl"`
-	Data                   *json.RawMessage `json:"data"`
+	Error                  *string          `json:"error,omitempty"`
+	ErrorAutoScreenshotUrl *string          `json:"errorAutoScreenshotUrl,omitempty"`
+	Data                   *json.RawMessage `json:"data,omitempty"`
 }
 
 const (
@@ -78,7 +78,20 @@ func (c *Client) Run(
 	}
 
 	if output.Error != nil {
-		return nil, fmt.Errorf("structural error set: %s", *output.Error)
+		scriptError := *output.Error
+
+		// hack to not repeat error in JSON
+		output.Error = nil
+
+		responseJsonWithoutErrorRepeated, err := json.Marshal(output)
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, fmt.Errorf(
+			"script error: %s\n\n%s",
+			scriptError,
+			responseJsonWithoutErrorRepeated)
 	}
 
 	if output.Data == nil {
