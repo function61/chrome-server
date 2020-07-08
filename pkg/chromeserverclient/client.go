@@ -1,6 +1,7 @@
 package chromeserverclient
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/function61/gokit/envvar"
 	"github.com/function61/gokit/ezhttp"
+	"github.com/function61/gokit/jsonfile"
 )
 
 type Output struct {
@@ -83,7 +85,7 @@ func (c *Client) Run(
 		return nil, errors.New("no data in response JSON")
 	}
 
-	return output, json.Unmarshal(*output.Data, data)
+	return output, jsonfile.Unmarshal(bytes.NewReader(*output.Data), data, true)
 }
 
 func StaticToken(token string) AuthTokenObtainer {
