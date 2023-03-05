@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "chrome-aws-lambda": "^2.1.1",
-    "puppeteer-core": "^2.1.1"
+    "chrome-aws-lambda": "~10.1.0",
+    "puppeteer": "~10.1.0"
   },
   "devDependencies": {
     "aws-sdk": "^2.709.0",
-    "puppeteer": "^2.1.1"
+    "puppeteer": "~10.1.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

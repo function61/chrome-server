@@ -1,4 +1,4 @@
-FROM node
+FROM node:latest
 
 # other than zip are merely dependencies for local Chrome to run in development mode
 # (not needed for building the Lambda function)
