@@ -9,9 +9,9 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/function61/gokit/envvar"
-	"github.com/function61/gokit/ezhttp"
-	"github.com/function61/gokit/jsonfile"
+	"github.com/function61/gokit/os/osutil"
+	"github.com/function61/gokit/net/http/ezhttp"
+	"github.com/function61/gokit/encoding/jsonfile"
 )
 
 type Output struct {
@@ -98,7 +98,7 @@ func (c *Client) Run(
 		return nil, errors.New("no data in response JSON")
 	}
 
-	return output, jsonfile.Unmarshal(bytes.NewReader(*output.Data), data, true)
+	return output, jsonfile.UnmarshalDisallowUnknownFields(bytes.NewReader(*output.Data), data)
 }
 
 func StaticToken(token string) AuthTokenObtainer {
@@ -108,5 +108,5 @@ func StaticToken(token string) AuthTokenObtainer {
 }
 
 func TokenFromEnv() (string, error) {
-	return envvar.Required("CHROMESERVER_AUTH_TOKEN")
+	return osutil.GetenvRequired("CHROMESERVER_AUTH_TOKEN")
 }
