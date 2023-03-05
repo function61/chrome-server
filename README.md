@@ -1,3 +1,5 @@
+⬆️ For table of contents, click the above icon
+
 ![Build status](https://github.com/function61/chrome-server/workflows/Build/badge.svg)
 [![Download](https://img.shields.io/github/downloads/function61/chrome-server/total.svg?style=for-the-badge)](https://github.com/function61/chrome-server/releases)
 
@@ -5,19 +7,6 @@ Chrome automation microservice for AWS Lambda with an HTTP API, automatic screen
 on errors and file upload support.
 
 ![](docs/drawing.png)
-
-Contents:
-
-- [Installation](#installation)
-- [Minimal test example](#minimal-test-example)
-- [How to submit jobs](#how-to-submit-jobs)
-- [Sending parameters to the script](#sending-parameters-to-the-script)
-- [Automatic screenshotting on errors](#automatic-screenshotting-on-errors)
-- [File uploads](#file-uploads)
-- [Setting up for screenshots and file uploads](#setting-up-for-screenshots-and-file-uploads)
-- [Local automation script dev](#local-automation-script-dev)
-- [Security](#security)
-- [Credits](#credits)
 
 
 Installation
